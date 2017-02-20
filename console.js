@@ -36,7 +36,7 @@ function startConsole(){
 	var rl = null;
 	
 	rl = readline.createInterface(process.stdin, process.stdout);
-	rl.setPrompt('RSK > ');
+	rl.setPrompt('RPC > ');
 	rl.prompt();	
 	
 	rl.on('line', function(line) {
@@ -99,82 +99,10 @@ function initializeWeb3(){
 }
 function printHelp(){
 	console.log("\n");
-	console.log("RSK Console usage: ");
+	console.log("RPC Console usage: ");
 	console.log("-----------------   \n");
 	console.log("usage: node console [-file script-filename] [-server address]   \n");
 	console.log("-file: script to use as input. Executes that file and exit console. ");
-	console.log("-server: specified RSK RPC JSON server to connect to. Default is localhost:4444 ");
+	console.log("-server: specified RPC JSON server to connect to. Default is localhost:4444 ");
 	console.log("\n");
-}
-
-function dumpTxsPerAccount() {
-	var startBlock = 0;
-	var endBlock = web3.eth.blockNumber;
-
-	console.log("dumping txs from block " + startBlock + " to block " + endBlock);
-
-	var txs = [];
-	for (var i = startBlock ; i <= endBlock; i++) {
-		// if (i % 100 == 0) {
-	      console.log("Searching block " + i);
-	    // }
-
-		var block = web3.eth.getBlock(i, true);
-		if (block != null && block.transactions != null) {
-			block.transactions.forEach( function(e) {
-				txs.push(e);
-		        // if (myaccount == "*" || myaccount == e.from || myaccount == e.to) {
-		          // console.log("  tx hash          : " + e.hash + "\n"
-		          //   + "   nonce           : " + e.nonce + "\n"
-		          //   + "   blockHash       : " + e.blockHash + "\n"
-		          //   + "   blockNumber     : " + e.blockNumber + "\n"
-		          //   + "   transactionIndex: " + e.transactionIndex + "\n"
-		          //   + "   from            : " + e.from + "\n" 
-		          //   + "   to              : " + e.to + "\n"
-		          //   + "   value           : " + e.value + "\n"
-		          //   + "   time            : " + block.timestamp + " " + new Date(block.timestamp * 1000).toGMTString() + "\n"
-		          //   + "   gasPrice        : " + e.gasPrice + "\n"
-		          //   + "   gas             : " + e.gas + "\n"
-		          //   + "   input           : " + e.input);
-		        // }
-		    })
-		}
-		else {
-			console.log("block " + i + " is null");
-		}
-	}
-
-	var stringified = JSON.stringify(txs);
-
-	fs.writeFile("txs.json", stringified, function(err) {
-	    if(err) {
-	        return console.log(err);
-	    }
-
-	    console.log("The file was saved!");
-	}); 
-}
-
-function getTransactionsByAccount(myaccount, startBlockNumber, endBlockNumber) {
-  if (endBlockNumber == null) {
-    endBlockNumber = web3.eth.blockNumber;
-    console.log("Using endBlockNumber: " + endBlockNumber);
-  }
-  if (startBlockNumber == null) {
-    startBlockNumber = endBlockNumber - 1000;
-    console.log("Using startBlockNumber: " + startBlockNumber);
-  }
-  console.log("Searching for transactions to/from account \"" + myaccount + "\" within blocks "  + startBlockNumber + " and " + endBlockNumber);
-
-  var filterObj = {
-          // "fromBlock": startBlockNumber,
-          // "toBlock": endBlockNumber,
-          "address": myaccount
-        };
-  var filter = web3.eth.filter(filterObj);
-  filter.get(function(error, log) {
-        console.log(error);
-        console.log(log);
-  });
-
 }
